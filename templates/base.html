@@ -6,7 +6,7 @@
   <!-- Required meta tags -->
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <title>Unique Physiotherapy</title>
+  <title>Musthafa Irons</title>
   <!-- plugins:css -->
   <link rel="stylesheet" href="{% static 'assets/vendors/feather/feather.css'  %}">
   <link rel="stylesheet" href="{% static 'assets/vendors/ti-icons/css/themify-icons.css' %}">
@@ -33,7 +33,7 @@
 
 /* common custom values */
 
-content: "Unique Physiotherapy"; /* your site name */
+content: "Musthafa Irons"; /* your site name */
 
 font-size: 520%;         /* font size */
 
@@ -163,7 +163,7 @@ user-select: none;
     <nav class="navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
       <div class="text-center navbar-brand-wrapper d-flex align-items-center justify-content-center">
         <!-- Fixed logo styling to be properly contained and centered -->
-        <a class="navbar-brand brand-logo m-0" href="{% url 'dashboard' %}" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; font-weight: 600; font-size: 1.25rem;">Unique Physiotherapy</a>
+        <a class="navbar-brand brand-logo m-0" href="{% url 'dashboard' %}" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; font-weight: 600; font-size: 1.25rem;">Musthafa Irons</a>
         {% comment %} <a class="navbar-brand brand-logo-mini" href="{% url 'dashboard' %}"><img src="{% static 'assets/images/logo.png' %}" alt="logo"/></a> {% endcomment %}
       </div>
       <div class="navbar-menu-wrapper d-flex align-items-center justify-content-end">
@@ -264,35 +264,40 @@ user-select: none;
               <span class="menu-title">Dashboard</span>
             </a>
           </li>
-          <li class="nav-item ">
-    <a class="nav-link" href="{% url 'patient_list' %}">
-      <!-- Changed to user icon for patients -->
-      <i class="icon-head menu-icon"></i>
-      <span class="menu-title">Patients</span>
-    </a>
-  </li>
-<li class="nav-item ">
-    <a class="nav-link" href="{% url 'daily_sheet_list' %}">
-      <!-- Changed to calendar icon for daily sheet -->
-      <i class="icon-paper menu-icon"></i>
-      <span class="menu-title">DailySheet</span>
-    </a>
-  </li>
-<li class="nav-item ">
-    <a class="nav-link" href="{% url 'pc_list_list' %}">
-      <!-- Changed to columns icon for PC list -->
-      <i class="icon-columns menu-icon"></i>
-      <span class="menu-title">PCList</span>
-    </a>
-  </li>
 <li class="nav-item">
-  <a class="nav-link" data-bs-toggle="collapse" href="#paymentMenu" aria-expanded="false">
-    <i class="icon-bar-graph menu-icon"></i>
-    <span class="menu-title">Payments</span>
-    <i class="menu-arrow"></i>
+  <a class="nav-link" href="{% url 'bill_list' %}">
+    <i class="icon-paper menu-icon"></i>
+    <span class="menu-title">Bills</span>
   </a>
+</li>
+          <li class="nav-item">
+  <a class="nav-link" href="{% url 'store_list' %}">
+    <i class="icon-briefcase menu-icon"></i>
+    <span class="menu-title">Stores</span>
+  </a>
+</li>
+<li class="nav-item">
+  <a class="nav-link" href="{% url 'product_list' %}">
+    <i class="icon-tag menu-icon"></i>
+    <span class="menu-title">Products</span>
+  </a>
+</li>
+      <li class="nav-item">
+  <a class="nav-link" href="{% url 'payment_list' %}">
+    <i class="icon-layers menu-icon"></i>
+    <span class="menu-title">Payments</span>
+  </a>
+</li>
 
-  <div class="collapse" id="paymentMenu">
+<li class="nav-item">
+  <a class="nav-link" href="{% url 'store_ledger_select' %}">
+    <i class="icon-grid menu-icon"></i>
+    <span class="menu-title">Ledger</span>
+  </a>
+</li>
+    {% comment %} {% if request.user.is_superuser or request.user.roles.name == "Admin" %} {% endcomment %}
+
+  {% comment %} <div class="collapse" id="paymentMenu">
     <ul class="nav flex-column sub-menu">
 
       <!-- WORKING ITEM -->
@@ -310,14 +315,14 @@ user-select: none;
       </li>
 
     </ul>
-  </div>
+  </div> {% endcomment %}
 </li>
 
 
 
           <!-- next menu -->
 
-          {% comment %} <li class="nav-item {{user_registration}}{{user_list}}{{roles}}">
+         {% comment %} <li class="nav-item {{user_registration}}{{user_list}}{{roles}}">
             <a class="nav-link"  href="#ui-basic" aria-expanded="false" aria-controls="ui-basic">
               <i class="icon-layout menu-icon"></i>
               <span class="menu-title">User Management</span>
@@ -329,9 +334,9 @@ user-select: none;
                 <li class="nav-item" {{user_list}}> <a class="nav-link" href="{% url 'user_list' %}">User</a></li>
             </ul>
             </div>
-          </li> {% endcomment %}
-
-          <!-- <li class="nav-item">
+          </li>  {% endcomment %}
+  {% comment %} {% endif %} {% endcomment %}
+         {% comment %} <li class="nav-item">
             <a class="nav-link"  href="#form-elements" aria-expanded="false" aria-controls="form-elements">
               <i class="icon-columns menu-icon"></i>
               <span class="menu-title">Form elements</span>
@@ -342,7 +347,7 @@ user-select: none;
                 <li class="nav-item"><a class="nav-link" href="pages/forms/basic_elements.html">Basic Elements</a></li>
               </ul>
             </div>
-          </li> -->
+          </li> {% endcomment %}
 
 
         </ul>

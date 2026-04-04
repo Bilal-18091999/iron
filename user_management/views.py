@@ -77,9 +77,9 @@ def user_edit(request,pk):
         context = {
             'form': form, 'user_edit': 'active', 'user_edit_show': 'show',
         }
-        return render(request,'create.html',context)
-        
-        #return render(request, 'UserManagement/user_edit.html', context)
+        # return render(request,'UserManagement/create.html',context)
+
+        return render(request, 'UserManagement/user_registration.html', context)
     except Exception as error:
         return render(request, '500.html', {'error': error})
 
@@ -136,7 +136,7 @@ def roles_create(request):
         context={
             'roles': 'active', 'roles_show': 'show','form':form,'screen_name':"Roles"
         }
-        return render(request,'create.html',context)
+        return render(request,'UserManagement/create.html',context)
     except Exception as error:
         return render(request, '500.html', {'error': error})
 
@@ -154,7 +154,7 @@ def roles_edit(request,pk):
         context={
             'roles': 'active', 'roles_show': 'show','form':form,'screen_name':"Roles"
         }
-        return render(request,'create.html',context)
+        return render(request,'UserManagement/create.html',context)
     except Exception as error:
         return render(request, '500.html', {'error': error})
 

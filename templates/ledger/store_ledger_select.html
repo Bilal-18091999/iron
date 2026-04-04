@@ -1,0 +1,144 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block body_block %}
+
+<div class="container-fluid py-4">
+
+  <!-- HEADER -->
+  <div class="d-flex justify-content-between align-items-center bg-white rounded shadow-sm px-4 py-3 mb-4">
+    <h4 class="fw-semibold text-primary mb-0">Store Ledger</h4>
+    <div id="datetime" class="text-muted small"></div>
+  </div>
+
+  <!-- FILTER SECTION -->
+  <div class="card shadow border-0 mb-4">
+    <div class="card-header bg-primary text-white">
+      <h5 class="mb-0">
+        <i class="fas fa-search me-2"></i> Search Store
+      </h5>
+    </div>
+    <div class="card-body">
+      <div class="row">
+        <div class="col-md-6 col-lg-4">
+          <label class="form-label fw-semibold">Store Name</label>
+          <input type="text" id="storeSearch" class="form-control" placeholder="Type store name to filter...">
+          <small class="text-muted">Start typing to filter stores by name</small>
+        </div>
+        <div class="col-md-6 col-lg-2 d-flex align-items-end">
+          <button type="button" id="clearSearch" class="btn btn-secondary w-100">
+            <i class="fas fa-times me-1"></i> Clear
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SELECT STORE CARD -->
+  <div class="card shadow border-0">
+    <div class="card-header bg-primary text-white">
+      <h5 class="mb-0">
+        <i class="fas fa-store me-2"></i> Select Store to View Ledger
+        <span id="storeCount" class="badge bg-light text-dark ms-2">{{ stores|length }} Stores</span>
+      </h5>
+    </div>
+    <div class="card-body">
+      <div class="row" id="storesContainer">
+        {% for store in stores %}
+        <div class="col-md-4 mb-3 store-card" data-store-name="{{ store.name|lower }}">
+          <div class="card h-100 border-2 shadow-sm">
+            <div class="card-body text-center">
+              <i class="fas fa-store fa-3x text-primary mb-3"></i>
+              <h5 class="card-title">{{ store.name }}</h5>
+              <p class="card-text text-muted small">
+                {% if store.phone %}<i class="fas fa-phone"></i> {{ store.phone }}<br>{% endif %}
+                {% if store.address %}<i class="fas fa-map-marker-alt"></i> {{ store.address|truncatewords:10 }}{% endif %}
+              </p>
+              <a href="{% url 'store_ledger_view' store.id %}" class="btn btn-primary">
+                <i class="fas fa-book me-2"></i> See Ledger
+              </a>
+            </div>
+          </div>
+        </div>
+        {% empty %}
+        <div class="col-12">
+          <div class="text-center py-5">
+            <i class="fas fa-store fa-3x text-muted mb-3"></i>
+            <p class="text-muted">No stores found. Please add stores first.</p>
+            <a href="{% url 'store_create' %}" class="btn btn-primary">Add Store</a>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+      
+      <!-- No results message -->
+      <div id="noResults" class="text-center py-5" style="display: none;">
+        <i class="fas fa-search fa-3x text-muted mb-3"></i>
+        <p class="text-muted">No stores found matching your search.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+<div class="text-center text-muted small mt-5">
+    © 2026 Musthafa Irons. All Rights Reserved.
+  </div>
+</div>
+
+<script>
+function updateDateTime() {
+  const now = new Date();
+  const datetimeElem = document.getElementById("datetime");
+  if (datetimeElem) {
+    datetimeElem.innerText = now.toLocaleDateString() + " | " + now.toLocaleTimeString();
+  }
+}
+setInterval(updateDateTime, 1000);
+updateDateTime();
+
+// Live search functionality
+document.addEventListener('DOMContentLoaded', function() {
+  const searchInput = document.getElementById('storeSearch');
+  const clearButton = document.getElementById('clearSearch');
+  const storeCards = document.querySelectorAll('.store-card');
+  const storeCountSpan = document.getElementById('storeCount');
+  const noResultsDiv = document.getElementById('noResults');
+  const storesContainer = document.getElementById('storesContainer');
+  
+  function filterStores() {
+    const searchTerm = searchInput.value.toLowerCase().trim();
+    let visibleCount = 0;
+    
+    storeCards.forEach(card => {
+      const storeName = card.getAttribute('data-store-name');
+      if (searchTerm === '' || storeName.includes(searchTerm)) {
+        card.style.display = 'block';
+        visibleCount++;
+      } else {
+        card.style.display = 'none';
+      }
+    });
+    
+    // Update store count
+    storeCountSpan.textContent = visibleCount + ' Stores';
+    
+    // Show/hide no results message
+    if (visibleCount === 0 && storeCards.length > 0) {
+      noResultsDiv.style.display = 'block';
+    } else {
+      noResultsDiv.style.display = 'none';
+    }
+  }
+  
+  // Search on input
+  searchInput.addEventListener('input', filterStores);
+  
+  // Clear search
+  clearButton.addEventListener('click', function() {
+    searchInput.value = '';
+    filterStores();
+    searchInput.focus();
+  });
+});
+</script>
+
+{% endblock %}

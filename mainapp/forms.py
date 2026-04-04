@@ -8,6 +8,157 @@ class LoginForm(forms.Form):
     email=forms.CharField()
     password=forms.CharField()
 
+from django import forms
+from .models import Store
+
+class StoreForm(forms.ModelForm):
+    class Meta:
+        model = Store
+        fields = ['name', 'phone', 'address']
+        widgets = {
+            'address': forms.Textarea(attrs={'rows': 3}),
+        }
+
+from django import forms
+from .models import Product
+
+class ProductForm(forms.ModelForm):
+    class Meta:
+        model = Product
+        fields = ['name', 'price', 'price_type']
+        widgets = {
+            'name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter product name'}),
+            'price': forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'Enter price', 'step': '0.01'}),
+            'price_type': forms.Select(attrs={'class': 'form-select'}),
+        }
+    
+    def clean_price(self):
+        price = self.cleaned_data.get('price')
+        if price and price <= 0:
+            raise forms.ValidationError("Price must be greater than zero.")
+        return price
+
+
+class ProductFilterForm(forms.Form):
+    name = forms.CharField(required=False, widget=forms.TextInput(attrs={
+        'class': 'form-control',
+        'placeholder': 'Search by product name'
+    }))
+    price_min = forms.DecimalField(required=False, widget=forms.NumberInput(attrs={
+        'class': 'form-control',
+        'placeholder': 'Min Price',
+        'step': '0.01'
+    }))
+    price_max = forms.DecimalField(required=False, widget=forms.NumberInput(attrs={
+        'class': 'form-control',
+        'placeholder': 'Max Price',
+        'step': '0.01'
+    }))
+    price_type = forms.ChoiceField(required=False, choices=[('', 'All')] + list(Product.PRICE_TYPE), widget=forms.Select(attrs={
+        'class': 'form-select'
+    }))
+
+from django import forms
+from .models import Bill, BillItem, Store, Product
+
+class BillForm(forms.ModelForm):
+    class Meta:
+        model = Bill
+        fields = ['store']
+        widgets = {
+            'store': forms.Select(attrs={'class': 'form-select store-select'}),
+            'customer_name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Customer Name'}),
+            'customer_phone': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Customer Phone'}),
+            'discount': forms.NumberInput(attrs={'class': 'form-control', 'step': '0.01', 'placeholder': 'Discount amount'}),
+            'tax': forms.NumberInput(attrs={'class': 'form-control', 'step': '0.01', 'placeholder': 'Tax amount'}),
+        }
+
+
+class BillItemForm(forms.ModelForm):
+    class Meta:
+        model = BillItem
+        fields = ['product', 'quantity', 'unit_type']
+        widgets = {
+            'product': forms.Select(attrs={'class': 'form-select product-select'}),
+            'quantity': forms.NumberInput(attrs={'class': 'form-control', 'step': '0.01', 'placeholder': 'Quantity'}),
+            'unit_type': forms.Select(attrs={'class': 'form-select'}),
+        }
+    
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['unit_type'].choices = [('piece', 'Piece'), ('dozen', 'Dozen')]
+
+
+class BillFilterForm(forms.Form):
+    bill_number = forms.CharField(required=False, widget=forms.TextInput(attrs={
+        'class': 'form-control',
+        'placeholder': 'Bill Number'
+    }))
+    store = forms.ModelChoiceField(required=False, queryset=Store.objects.all(), widget=forms.Select(attrs={
+        'class': 'form-select'
+    }))
+    customer_name = forms.CharField(required=False, widget=forms.TextInput(attrs={
+        'class': 'form-control',
+        'placeholder': 'Customer Name'
+    }))
+    date_from = forms.DateField(required=False, widget=forms.DateInput(attrs={
+        'class': 'form-control',
+        'type': 'date'
+    }))
+    date_to = forms.DateField(required=False, widget=forms.DateInput(attrs={
+        'class': 'form-control',
+        'type': 'date'
+    }))
+
+from django import forms
+from .models import Payment, Store
+from django.utils import timezone
+
+class PaymentForm(forms.ModelForm):
+    class Meta:
+        model = Payment
+        fields = ['store', 'amount', 'payment_type', 'date']
+        widgets = {
+            'store': forms.Select(attrs={'class': 'form-select'}),
+            'amount': forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'Enter amount', 'step': '0.01'}),
+            'payment_type': forms.Select(attrs={'class': 'form-select'}),
+            'date': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}),
+        }
+    
+    def clean_amount(self):
+        amount = self.cleaned_data.get('amount')
+        if amount and amount <= 0:
+            raise forms.ValidationError("Amount must be greater than zero.")
+        return amount
+
+
+class PaymentFilterForm(forms.Form):
+    store = forms.ModelChoiceField(required=False, queryset=Store.objects.all(), widget=forms.Select(attrs={
+        'class': 'form-select',
+        'placeholder': 'Select Store'
+    }))
+    payment_type = forms.ChoiceField(required=False, choices=[('', 'All')] + list(Payment.PAYMENT_TYPE), widget=forms.Select(attrs={
+        'class': 'form-select'
+    }))
+    amount_min = forms.DecimalField(required=False, widget=forms.NumberInput(attrs={
+        'class': 'form-control',
+        'placeholder': 'Min Amount',
+        'step': '0.01'
+    }))
+    amount_max = forms.DecimalField(required=False, widget=forms.NumberInput(attrs={
+        'class': 'form-control',
+        'placeholder': 'Max Amount',
+        'step': '0.01'
+    }))
+    date_from = forms.DateField(required=False, widget=forms.DateInput(attrs={
+        'class': 'form-control',
+        'type': 'date'
+    }))
+    date_to = forms.DateField(required=False, widget=forms.DateInput(attrs={
+        'class': 'form-control',
+        'type': 'date'
+    }))
+
 class GenericModelForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(GenericModelForm, self).__init__(*args, **kwargs)

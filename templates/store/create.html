@@ -1,0 +1,115 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block body_block %}
+
+<div class="container-fluid py-4">
+
+  <!-- HEADER -->
+  <div class="d-flex justify-content-between align-items-center bg-white rounded shadow-sm px-4 py-3 mb-4">
+    <h4 class="fw-semibold text-primary mb-0">
+      {% if form.instance.pk %}Edit Store{% else %}Create New Store{% endif %}
+    </h4>
+    <div id="datetime" class="text-muted small"></div>
+  </div>
+
+  <!-- FORM CONTAINER -->
+  <div class="card shadow border-0">
+    <div class="card-body p-4">
+
+      <!-- 🔴 GLOBAL FORM ERRORS -->
+      {% if form.errors %}
+      <div class="alert alert-danger alert-dismissible fade show">
+        <strong>Please correct the errors below.</strong>
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+      </div>
+      {% endif %}
+
+      <!-- FORM HEADER -->
+      <div class="d-flex align-items-center border-bottom pb-3 mb-4">
+        <i class="fas fa-store fa-lg text-primary me-3"></i>
+        <h5 class="text-primary mb-0">Store Information</h5>
+      </div>
+
+      <form method="post" novalidate>
+        {% csrf_token %}
+
+        <!-- BASIC INFO SECTION -->
+        <div class="bg-light rounded border-start border-4 border-primary p-4 mb-4">
+          <h6 class="fw-semibold text-primary mb-3">
+            <i class="fas fa-building me-2"></i> Basic Information
+          </h6>
+
+          <div class="row g-4">
+            <!-- NAME -->
+            <div class="col-lg-6 col-md-12">
+              <label class="form-label fw-semibold">Store Name *</label>
+              {{ form.name }}
+              {% for error in form.name.errors %}
+                <div class="text-danger small mt-1">{{ error }}</div>
+              {% endfor %}
+            </div>
+
+            <!-- PHONE -->
+            <div class="col-lg-6 col-md-12">
+              <label class="form-label fw-semibold">Phone Number</label>
+              {{ form.phone }}
+              {% for error in form.phone.errors %}
+                <div class="text-danger small mt-1">{{ error }}</div>
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+
+        <!-- ADDRESS SECTION -->
+        <div class="bg-light rounded border-start border-4 border-primary p-4 mb-4">
+          <h6 class="fw-semibold text-primary mb-3">
+            <i class="fas fa-map-marker-alt me-2"></i> Address Details
+          </h6>
+
+          <div class="row g-4">
+            <div class="col-12">
+              <label class="form-label fw-semibold">Full Address</label>
+              {{ form.address }}
+              {% for error in form.address.errors %}
+                <div class="text-danger small mt-1">{{ error }}</div>
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+
+        <!-- ACTION BUTTONS -->
+        <div class="d-flex justify-content-end gap-3 border-top pt-4">
+          <a href="{% url 'store_list' %}" class="btn btn-secondary px-4">
+            <i class="fas fa-times me-1"></i> Cancel
+          </a>
+
+          <button type="submit" class="btn btn-primary px-4">
+            <i class="fas fa-save me-1"></i> 
+            {% if form.instance.pk %}Update Store{% else %}Save Store{% endif %}
+          </button>
+        </div>
+
+      </form>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <div class="text-center text-muted small mt-4">
+    © 2026 Musthafa Irons. All Rights Reserved.
+  </div>
+
+</div>
+
+<script>
+function updateDateTime() {
+  const now = new Date();
+  const datetimeElem = document.getElementById("datetime");
+  if (datetimeElem) {
+    datetimeElem.innerText = now.toLocaleDateString() + " | " + now.toLocaleTimeString();
+  }
+}
+setInterval(updateDateTime, 1000);
+updateDateTime();
+</script>
+
+{% endblock %}

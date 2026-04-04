@@ -6,49 +6,53 @@ urlpatterns = [
     path('logout/', views.user_logout, name='logout'),
     path('', views.user_login, name='user_login'),
 
-    
+    path('store/', views.store_list, name='store_list'),
+    path('store/new/', views.store_create, name='store_create'),
+    path('store/<int:pk>/edit/', views.store_update, name='store_update'),
+    path('store/<int:pk>/delete/', views.store_delete, name='store_delete'),
+
+    path('product/', views.product_list, name='product_list'),
+    path('product/new/', views.product_create, name='product_create'),
+    path('product/<int:pk>/edit/', views.product_update, name='product_update'),
+    path('product/<int:pk>/delete/', views.product_delete, name='product_delete'),
+
+
+        # Bill URLs
+    path('bill/', views.bill_list, name='bill_list'),
+    path('bill/new/', views.bill_create, name='bill_create'),
+    path('bill/<int:pk>/edit/', views.bill_edit, name='bill_edit'),
+    path('bill/<int:pk>/delete/', views.bill_delete, name='bill_delete'),
+    path('bill/<int:pk>/view/', views.bill_view, name='bill_view'),
+    path('bill/download/<int:pk>/', views.download_bill_as_image, name='download_bill'),
+    path('bill/item/<int:pk>/delete/', views.bill_delete_item, name='bill_delete_item'),
+
+    # Autocomplete URLs
+    path('store-autocomplete/', views.store_autocomplete, name='store_autocomplete'),
+    path('product-autocomplete/', views.product_autocomplete, name='product_autocomplete'),
+    path('calculate-item-price/', views.calculate_item_price, name='calculate_item_price'),
+
+
+
+    # Payment URLs
+    path('payment/', views.payment_list, name='payment_list'),
+    path('payment/new/', views.payment_create, name='payment_create'),
+    path('payment/<int:pk>/edit/', views.payment_update, name='payment_update'),
+    path('payment/<int:pk>/delete/', views.payment_delete, name='payment_delete'),
+
+
+
+    # Store Ledger URLs
+    path('store-ledger/', views.store_ledger_select, name='store_ledger_select'),
+    path('store-ledger/<int:store_id>/', views.store_ledger_view, name='store_ledger_view'),
+
+
+        
     path('patient/', views.patient_list, name='patient_list'),
     path('patient/new/', views.patient_create, name='patient_create'),
     path('patient/<int:pk>/edit/', views.patient_update, name='patient_update'),
     path('patient/<int:pk>/delete/', views.patient_delete, name='patient_delete'),
-    path('patient/upload/', views.upload_excel, name='upload_excel'),
-    path('patient/download/', views.download_excel, name='download_excel'),
+  
 
-    path('dailysheet/', views.daily_sheet_list, name='daily_sheet_list'),
-    path('dailysheet/new/', views.daily_sheet_create, name='daily_sheet_create'),
-    path('ajax/check-case-number/', views.check_case_number),
-    path('ajax/patient-followups/<int:patient_id>/', views.patient_followups),
-    path('dailysheet/<int:pk>/edit/', views.daily_sheet_update, name='daily_sheet_update'),
-    path('dailysheet/<int:pk>/delete/', views.daily_sheet_delete, name='daily_sheet_delete'),
-    path('dailysheet/export/', views.daily_sheet_export, name='daily_sheet_export'),
-    path('dailysheet/import/', views.daily_sheet_import, name='daily_sheet_import'),
-
-
-    path('pclist/', views.pc_list_list, name='pc_list_list'),
-    path('pclist/new/', views.pc_list_create, name='pc_list_create'),
-    path('ajax/check-pc-number/', views.check_pc_number),
-    path('ajax/patient-pc-followups/<int:patient_id>/', views.patient_pc_followups),
-    path('pclist/<int:pk>/edit/', views.pc_list_update, name='pc_list_update'),
-    path('pclist/<int:pk>/delete/', views.pc_list_delete, name='pc_list_delete'),
-    path('pclist/export/', views.pc_list_export, name='pc_list_export'),
-    path('pclist/import/', views.pc_list_import, name='pc_list_import'),
-
-
-    path("payment_dashboard/", views.payment_dashboard, name="payment_dashboard"),
-    path("pending/", views.pending_list, name="pending_list"),
-    path("advance/", views.advance_list, name="advance_list"),
-    path("ledger/<int:patient_id>/", views.patient_ledger_view, name="patient_ledger"),
-    path("monthly/", views.monthly_summary, name="monthly_summary"),
-    path("yearly/", views.yearly_summary, name="yearly_summary"),
-
-# pc_payment_urls.py OR same urls.py
-
-    path("pc/payment-dashboard/", views.pc_payment_dashboard, name="pc_payment_dashboard"),
-    path("pc/pending/", views.pc_pending_list, name="pc_pending_list"),
-    path("pc/advance/", views.pc_advance_list, name="pc_advance_list"),
-    path("pc/ledger/<int:patient_id>/", views.pc_patient_ledger, name="pc_patient_ledger"),
-    path("pc/monthly/", views.pc_monthly_summary, name="pc_monthly_summary"),
-    path("pc/yearly/", views.pc_yearly_summary, name="pc_yearly_summary"),
 
     
 

@@ -1,0 +1,199 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block body_block %}
+
+<div class="container-fluid py-4">
+
+  <!-- TOP BAR -->
+
+  <div class="d-flex justify-content-between align-items-center bg-white rounded shadow-sm px-4 py-3 mb-3">
+    <div>
+      {% comment %} <a href="{% url 'store_ledger_select' %}" class="btn btn-outline-secondary me-2">
+        <i class="fas fa-arrow-left"></i> Back
+      </a> {% endcomment %}
+      <h4 class="fw-semibold text-primary d-inline-block mb-0">Ledger</h4>
+    </div>
+    <div class="text-end">
+      <h5 class="text-success mb-0">{{ store.name }}</h5>
+      <div id="datetime" class="text-muted small"></div>
+    </div>
+  </div>
+
+  <!-- DOWNLOAD BUTTON -->
+
+  <div class="text-end mb-3">
+    <button id="downloadLedger" class="btn btn-success btn-sm">
+      <i class="fas fa-download me-1"></i> Download
+    </button>
+  </div>
+
+  <!-- DOWNLOAD AREA -->
+
+  <div id="ledgerDownload">
+
+```
+<!-- HEADER FOR DOWNLOAD -->
+<div class="d-flex justify-content-between align-items-center bg-white px-3 py-2 border">
+  <h4 class="fw-semibold text-primary mb-0">Ledger</h4>
+  <h5 class="text-success mb-0">{{ store.name }}</h5>
+</div>
+
+<!-- TABLE -->
+<div class="card shadow border-0" id="ledgerTable">
+  <div class="card-body p-0">
+    <table class="table table-bordered mb-0">
+      <thead class="table-dark">
+        <tr class="text-center">
+          <th>Date</th>
+          <th>Bill Amount</th>
+          <th>Payment</th>
+          <th>Type</th>
+          <th>Balance</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for entry in ledger_data %}
+        <tr>
+          <td class="text-center">{{ entry.date|date:"d-m-Y" }}</td>
+
+          <td class="text-end">
+            {% if entry.bill_amount %}
+            ₹{{ entry.bill_amount|floatformat:0 }}
+            {% endif %}
+          </td>
+
+          <td class="text-end">
+            {% if entry.payment_amount %}
+            ₹{{ entry.payment_amount|floatformat:0 }}
+            {% endif %}
+          </td>
+
+          <td class="text-center">
+            {% if entry.payment_type == 'cash' %}
+            <span class="badge bg-success">Cash</span>
+            {% elif entry.payment_type == 'Gpay' %}
+            <span class="badge bg-info">Gpay</span>
+            {% endif %}
+          </td>
+
+          <td class="text-end fw-bold">
+            ₹{{ entry.balance|floatformat:0 }}
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+```
+
+  </div>
+
+</div>
+
+<style>
+
+.table-bordered td,
+.table-bordered th {
+  border: 1px solid #dee2e6;
+  vertical-align: middle;
+}
+
+.table-dark th {
+  background-color: #212529 !important;
+  color: white;
+}
+
+.badge {
+  padding: 4px 8px;
+  font-size: 11px;
+}
+
+/* MOBILE RESPONSIVE */
+@media (max-width: 576px) {
+
+  #ledgerTable {
+    font-size: 12px;
+  }
+
+  table {
+    width: 100%;
+    table-layout: auto;
+  }
+
+  th:nth-child(1),
+  td:nth-child(1) {
+    width: 18%;
+    text-align: center;
+  }
+
+  th:nth-child(2),
+  td:nth-child(2) {
+    width: 20%;
+    text-align: right;
+  }
+
+  th:nth-child(3),
+  td:nth-child(3) {
+    width: 18%;
+    text-align: right;
+  }
+
+  th:nth-child(4),
+  td:nth-child(4) {
+    width: 16%;
+    text-align: center;
+  }
+
+  th:nth-child(5),
+  td:nth-child(5) {
+    width: 28%;
+    text-align: right;
+    font-weight: 600;
+  }
+
+  table th,
+  table td {
+    padding: 4px !important;
+    font-size: 12px;
+    white-space: nowrap;
+  }
+}
+
+</style>
+
+<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+
+<script>
+
+// date time
+function updateDateTime() {
+  const now = new Date();
+  document.getElementById("datetime").innerText =
+    now.toLocaleDateString() + " | " + now.toLocaleTimeString();
+}
+setInterval(updateDateTime, 1000);
+updateDateTime();
+
+// download with header
+document.getElementById('downloadLedger').addEventListener('click', function () {
+
+  const ledger = document.getElementById('ledgerDownload');
+
+  html2canvas(ledger, {
+    scale: 2,
+    backgroundColor: "#ffffff"
+  }).then(canvas => {
+
+    const link = document.createElement('a');
+    link.download = "Ledger_{{store.name}}.png";
+    link.href = canvas.toDataURL();
+    link.click();
+
+  });
+
+});
+
+</script>
+
+{% endblock %}
