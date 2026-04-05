@@ -81,41 +81,43 @@
               <th class="text-center">Actions</th>
             </tr>
           </thead>
-          <tbody>
-            {% for bill in records %}
-            <tr>
-              <td>{{ forloop.counter }}</td>
-              <td>{{ bill.date|date:"d-m-Y" }}</td>        
-             <td><span class="badge bg-info">{{ bill.bill_number }}</span></td>
-              
-              <td>{{ bill.store.name }}</td>
-              <td>₹{{ bill.total_amount|floatformat:2 }}</td>
-              <td class="text-center">
-                <div class="btn-group btn-group-sm">
-                  <a href="{% url 'bill_view' bill.id %}" class="btn btn-outline-info">
-                    <i class="bi bi-eye"></i> View
-                  </a>
-                  <a href="{% url 'bill_edit' bill.id %}" class="btn btn-outline-primary">
-                    <i class="bi bi-pencil-square"></i> Edit
-                  </a>
-                  <a href="{% url 'download_bill' bill.id %}" class="btn btn-outline-success">
-                    <i class="bi bi-download"></i> PDF
-                  </a>
-                  <a href="{% url 'bill_delete' bill.id %}" class="btn btn-outline-danger btn-delete">
-                    <i class="bi bi-trash"></i> Delete
-                  </a>
-                </div>
-              </td>
-            </tr>
-            {% empty %}
-            <tr>
-              <td colspan="8" class="text-center py-5">
-                <i class="fas fa-receipt fa-2x text-muted mb-2"></i>
-                <p class="mb-0 text-muted">No bills found</p>
-              </td>
-            </tr>
-            {% endfor %}
-          </tbody>
+        <tbody>
+  {% for bill in records %}
+
+  {% ifchanged bill.date %}
+    {% if not forloop.first %}
+    <tr>
+      <td colspan="6" style="height:8px; background:#f8f9fa;"></td>
+    </tr>
+    {% endif %}
+  {% endifchanged %}
+
+  <tr>
+    <td>{{ forloop.counter }}</td>
+    <td>{{ bill.date|date:"d-m-Y" }}</td>        
+    <td><span class="badge bg-info">{{ bill.bill_number }}</span></td>
+    <td>{{ bill.store.name }}</td>
+    <td>₹{{ bill.total_amount|floatformat:2 }}</td>
+    <td class="text-center">
+      <div class="btn-group btn-group-sm">
+        <a href="{% url 'bill_view' bill.id %}" class="btn btn-outline-info">
+          <i class="bi bi-eye"></i> View
+        </a>
+        <a href="{% url 'bill_edit' bill.id %}" class="btn btn-outline-primary">
+          <i class="bi bi-pencil-square"></i> Edit
+        </a>
+        <a href="{% url 'download_bill' bill.id %}" class="btn btn-outline-success">
+          <i class="bi bi-download"></i> PDF
+        </a>
+        <a href="{% url 'bill_delete' bill.id %}" class="btn btn-outline-danger btn-delete">
+          <i class="bi bi-trash"></i> Delete
+        </a>
+      </div>
+    </td>
+  </tr>
+
+  {% endfor %}
+</tbody>
         </table>
       </div>
     </div>

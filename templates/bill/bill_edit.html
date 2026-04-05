@@ -10,7 +10,41 @@
   </div>
 
   <div class="row">
+
+    <!-- LEFT SIDE -->
     <div class="col-lg-4">
+
+      <!-- BILL DETAILS -->
+      <div class="card shadow border-0 mb-4">
+        <div class="card-header bg-primary text-white">
+          <h5 class="mb-0">Bill Details</h5>
+        </div>
+        <div class="card-body">
+
+          <form method="post">
+            {% csrf_token %}
+            <input type="hidden" name="update_bill" value="1">
+
+            <div class="mb-3">
+              <label class="form-label fw-semibold">Store</label>
+              {{ form.store }}
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label fw-semibold">Date</label>
+              {{ form.date }}
+            </div>
+
+            <button type="submit" class="btn btn-success w-100">
+              Update Bill
+            </button>
+
+          </form>
+
+        </div>
+      </div>
+
+      <!-- ADD ITEMS -->
       <div class="card shadow border-0 mb-4">
         <div class="card-header bg-primary text-white">
           <h5 class="mb-0">Add Items</h5>
@@ -41,8 +75,10 @@
           </form>
         </div>
       </div>
+
     </div>
 
+    <!-- RIGHT SIDE -->
     <div class="col-lg-8">
       <div class="card shadow border-0 mb-4">
         <div class="card-header bg-primary text-white">
@@ -105,11 +141,6 @@
       <div class="d-flex justify-content-end gap-3">
         <a href="{% url 'bill_list' %}" class="btn btn-secondary">Back to List</a>
         <a href="{% url 'bill_view' bill.id %}" class="btn btn-info">View Bill</a>
-        <form method="post" style="display: inline;">
-          {% csrf_token %}
-          <input type="hidden" name="update_bill" value="1">
-          <button type="submit" class="btn btn-success">Update Bill</button>
-        </form>
       </div>
     </div>
   </div>
@@ -118,7 +149,6 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
 $(document).ready(function() {
-  // Delete item
   $('.delete-item').click(function() {
     var itemId = $(this).data('id');
     if (confirm('Remove this item?')) {
@@ -138,7 +168,8 @@ $(document).ready(function() {
 
 function updateDateTime() {
   const now = new Date();
-  document.getElementById("datetime").innerText = now.toLocaleDateString() + " | " + now.toLocaleTimeString();
+  document.getElementById("datetime").innerText = 
+    now.toLocaleDateString() + " | " + now.toLocaleTimeString();
 }
 setInterval(updateDateTime, 1000);
 updateDateTime();

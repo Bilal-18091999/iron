@@ -262,11 +262,9 @@ def product_autocomplete(request):
         } for product in products]
         return JsonResponse({'results': results})
     return JsonResponse({'results': []})
-
-# Bill CRUD views
 @login_required(login_url='/')
 def bill_list(request):
-    records = Bill.objects.all().order_by('-created_at')
+    records = Bill.objects.all().order_by('-date', '-id')
     
     filter_form = BillFilterForm(request.GET or None)
     
@@ -285,11 +283,11 @@ def bill_list(request):
         
         date_from = filter_form.cleaned_data.get('date_from')
         if date_from:
-            records = records.filter(created_at__date__gte=date_from)
+            records = records.filter(date__gte=date_from)
         
         date_to = filter_form.cleaned_data.get('date_to')
         if date_to:
-            records = records.filter(created_at__date__lte=date_to)
+            records = records.filter(date__lte=date_to)
     
     context = {
         'records': records,
@@ -315,15 +313,17 @@ def bill_create(request):
     return render(request, 'bill/bill_create.html', context)
 
 @login_required(login_url='/')
+@login_required(login_url='/')
 def bill_edit(request, pk):
     bill = get_object_or_404(Bill, pk=pk)
     
     if request.method == 'POST':
         if 'update_bill' in request.POST:
-            form = BillForm(request.POST, instance=bill)
+            form = BillEditForm(request.POST, instance=bill)
             if form.is_valid():
                 form.save()
                 return redirect('bill_list')
+
         elif 'add_item' in request.POST:
             item_form = BillItemForm(request.POST)
             if item_form.is_valid():
@@ -332,7 +332,7 @@ def bill_edit(request, pk):
                 item.save()
                 return redirect('bill_edit', pk=bill.pk)
     else:
-        form = BillForm(instance=bill)
+        form = BillEditForm(instance=bill)   # ✅ IMPORTANT FIX
     
     item_form = BillItemForm()
     items = bill.items.all()

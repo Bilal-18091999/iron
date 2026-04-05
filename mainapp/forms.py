@@ -67,12 +67,25 @@ class BillForm(forms.ModelForm):
         fields = ['store']
         widgets = {
             'store': forms.Select(attrs={'class': 'form-select store-select'}),
+            'date': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}),
             'customer_name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Customer Name'}),
             'customer_phone': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Customer Phone'}),
             'discount': forms.NumberInput(attrs={'class': 'form-control', 'step': '0.01', 'placeholder': 'Discount amount'}),
             'tax': forms.NumberInput(attrs={'class': 'form-control', 'step': '0.01', 'placeholder': 'Tax amount'}),
         }
 
+class BillEditForm(forms.ModelForm):
+    class Meta:
+        model = Bill
+        fields = ['store', 'date']
+        widgets = {
+            'store': forms.Select(attrs={'class': 'form-select store-select'}),
+            'date': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}),
+            'customer_name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Customer Name'}),
+            'customer_phone': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Customer Phone'}),
+            'discount': forms.NumberInput(attrs={'class': 'form-control', 'step': '0.01', 'placeholder': 'Discount amount'}),
+            'tax': forms.NumberInput(attrs={'class': 'form-control', 'step': '0.01', 'placeholder': 'Tax amount'}),
+        }
 
 class BillItemForm(forms.ModelForm):
     class Meta:
