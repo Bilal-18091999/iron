@@ -17,7 +17,6 @@ urlpatterns = [
     path('product/<int:pk>/delete/', views.product_delete, name='product_delete'),
 
 
-        # Bill URLs
     path('bill/', views.bill_list, name='bill_list'),
     path('bill/new/', views.bill_create, name='bill_create'),
     path('bill/<int:pk>/edit/', views.bill_edit, name='bill_edit'),
@@ -25,6 +24,7 @@ urlpatterns = [
     path('bill/<int:pk>/view/', views.bill_view, name='bill_view'),
     path('bill/download/<int:pk>/', views.download_bill_as_image, name='download_bill'),
     path('bill/item/<int:pk>/delete/', views.bill_delete_item, name='bill_delete_item'),
+    path('bill/item/<int:pk>/update/', views.bill_update_item, name='bill_update_item'),
 
     # Autocomplete URLs
     path('store-autocomplete/', views.store_autocomplete, name='store_autocomplete'),

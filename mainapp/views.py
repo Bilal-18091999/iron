@@ -262,6 +262,7 @@ def product_autocomplete(request):
         } for product in products]
         return JsonResponse({'results': results})
     return JsonResponse({'results': []})
+
 @login_required(login_url='/')
 def bill_list(request):
     records = Bill.objects.all().order_by('-date', '-id')
@@ -370,6 +371,28 @@ def bill_delete_item(request, pk):
         bill_pk = item.bill.pk
         item.delete()
         return JsonResponse({'success': True})
+    return JsonResponse({'success': False})
+
+@login_required(login_url='/')
+@csrf_exempt
+def bill_update_item(request, pk):
+    if request.method == 'POST':
+        item = get_object_or_404(BillItem, pk=pk)
+
+        quantity = Decimal(request.POST.get('quantity'))
+        unit_type = request.POST.get('unit_type')
+        price_per_unit = Decimal(request.POST.get('price_per_unit'))
+
+        item.quantity = quantity
+        item.unit_type = unit_type
+        item.price_per_unit = price_per_unit
+        item.save()
+
+        return JsonResponse({
+            'success': True,
+            'total_price': float(item.total_price)
+        })
+
     return JsonResponse({'success': False})
 
 @login_required(login_url='/')
@@ -519,7 +542,6 @@ def calculate_item_price(request):
         })
     
     return JsonResponse({'success': False})
-
 
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required

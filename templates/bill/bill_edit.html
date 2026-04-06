@@ -11,168 +11,283 @@
 
   <div class="row">
 
-    <!-- LEFT SIDE -->
-    <div class="col-lg-4">
+```
+<!-- LEFT SIDE -->
+<div class="col-lg-4">
 
-      <!-- BILL DETAILS -->
-      <div class="card shadow border-0 mb-4">
-        <div class="card-header bg-primary text-white">
-          <h5 class="mb-0">Bill Details</h5>
+  <!-- BILL DETAILS -->
+  <div class="card shadow border-0 mb-4">
+    <div class="card-header bg-primary text-white">
+      <h5 class="mb-0">Bill Details</h5>
+    </div>
+    <div class="card-body">
+
+      <form method="post">
+        {% csrf_token %}
+        <input type="hidden" name="update_bill" value="1">
+
+        <div class="mb-3">
+          <label class="form-label fw-semibold">Store</label>
+          {{ form.store }}
         </div>
-        <div class="card-body">
 
-          <form method="post">
-            {% csrf_token %}
-            <input type="hidden" name="update_bill" value="1">
-
-            <div class="mb-3">
-              <label class="form-label fw-semibold">Store</label>
-              {{ form.store }}
-            </div>
-
-            <div class="mb-3">
-              <label class="form-label fw-semibold">Date</label>
-              {{ form.date }}
-            </div>
-
-            <button type="submit" class="btn btn-success w-100">
-              Update Bill
-            </button>
-
-          </form>
-
+        <div class="mb-3">
+          <label class="form-label fw-semibold">Date</label>
+          {{ form.date }}
         </div>
-      </div>
 
-      <!-- ADD ITEMS -->
-      <div class="card shadow border-0 mb-4">
-        <div class="card-header bg-primary text-white">
-          <h5 class="mb-0">Add Items</h5>
-        </div>
-        <div class="card-body">
-          <form method="post" id="addItemForm">
-            {% csrf_token %}
-            <input type="hidden" name="add_item" value="1">
-            
-            <div class="mb-3">
-              <label class="form-label fw-semibold">Product</label>
-              {{ item_form.product }}
-            </div>
-            
-            <div class="mb-3">
-              <label class="form-label fw-semibold">Quantity</label>
-              {{ item_form.quantity }}
-            </div>
-            
-            <div class="mb-3">
-              <label class="form-label fw-semibold">Unit Type</label>
-              {{ item_form.unit_type }}
-            </div>
-            
-            <button type="submit" class="btn btn-primary w-100">
-              <i class="fas fa-plus me-2"></i> Add Item
-            </button>
-          </form>
-        </div>
-      </div>
+        <button type="submit" class="btn btn-success w-100">
+          Update Bill
+        </button>
+
+      </form>
 
     </div>
+  </div>
 
-    <!-- RIGHT SIDE -->
-    <div class="col-lg-8">
-      <div class="card shadow border-0 mb-4">
-        <div class="card-header bg-primary text-white">
-          <h5 class="mb-0">Bill Items</h5>
+  <!-- ADD ITEMS -->
+  <div class="card shadow border-0 mb-4">
+    <div class="card-header bg-primary text-white">
+      <h5 class="mb-0">Add Items</h5>
+    </div>
+    <div class="card-body">
+      <form method="post" id="addItemForm">
+        {% csrf_token %}
+        <input type="hidden" name="add_item" value="1">
+        
+        <div class="mb-3">
+          <label class="form-label fw-semibold">Product</label>
+          {{ item_form.product }}
         </div>
-        <div class="card-body p-0">
-          <div class="table-responsive">
-            <table class="table table-hover mb-0">
-              <thead class="table-light">
-                <tr>
-                  <th>Product</th>
-                  <th>Quantity</th>
-                  <th>Unit Price</th>
-                  <th>Total</th>
-                  <th>Action</th>
-                </tr>
-              </thead>
-              <tbody id="items-list">
-                {% for item in items %}
-                <tr data-item-id="{{ item.id }}">
-                  <td>{{ item.product.name }}</td>
-                  <td>{{ item.quantity }} {{ item.get_unit_type_display }}</td>
-                  <td>₹{{ item.price_per_unit|floatformat:2 }}</td>
-                  <td>₹{{ item.total_price|floatformat:2 }}</td>
-                  <td>
-                    <button class="btn btn-sm btn-danger delete-item" data-id="{{ item.id }}">
-                      <i class="bi bi-trash"></i>
-                    </button>
-                  </td>
-                </tr>
-                {% empty %}
-                <tr>
-                  <td colspan="5" class="text-center py-5">No items added yet</td>
-                </tr>
-                {% endfor %}
-              </tbody>
-              <tfoot class="table-light">
-                <tr>
-                  <td colspan="3" class="text-end fw-bold">Subtotal:</td>
-                  <td colspan="2" class="fw-bold">₹{{ bill.total_amount|floatformat:2 }}</td>
-                </tr>
-                <tr>
-                  <td colspan="3" class="text-end fw-bold">Discount:</td>
-                  <td colspan="2">-₹{{ bill.discount|floatformat:2 }}</td>
-                </tr>
-                <tr>
-                  <td colspan="3" class="text-end fw-bold">Tax:</td>
-                  <td colspan="2">+₹{{ bill.tax|floatformat:2 }}</td>
-                </tr>
-                <tr>
-                  <td colspan="3" class="text-end fw-bold">Grand Total:</td>
-                  <td colspan="2" class="fw-bold text-primary">₹{{ bill.grand_total|floatformat:2 }}</td>
-                </tr>
-              </tfoot>
-            </table>
-          </div>
+        
+        <div class="mb-3">
+          <label class="form-label fw-semibold">Quantity</label>
+          {{ item_form.quantity }}
         </div>
-      </div>
+        
+        <div class="mb-3">
+          <label class="form-label fw-semibold">Unit Type</label>
+          {{ item_form.unit_type }}
+        </div>
+        
+        <button type="submit" class="btn btn-primary w-100">
+          <i class="fas fa-plus me-2"></i> Add Item
+        </button>
+      </form>
+    </div>
+  </div>
 
-      <div class="d-flex justify-content-end gap-3">
-        <a href="{% url 'bill_list' %}" class="btn btn-secondary">Back to List</a>
-        <a href="{% url 'bill_view' bill.id %}" class="btn btn-info">View Bill</a>
+</div>
+
+<!-- RIGHT SIDE -->
+<div class="col-lg-8">
+  <div class="card shadow border-0 mb-4">
+    <div class="card-header bg-primary text-white">
+      <h5 class="mb-0">Bill Items</h5>
+    </div>
+    <div class="card-body p-0">
+      <div class="table-responsive">
+        <table class="table table-hover mb-0">
+          <thead class="table-light">
+            <tr>
+              <th>Product</th>
+              <th>Quantity</th>
+              <th>Unit</th>
+              <th>Unit Price</th>
+              <th>Total</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+
+          <tbody id="items-list">
+            {% for item in items %}
+            <tr data-item-id="{{ item.id }}" data-product-id="{{ item.product.id }}">
+              
+              <td>{{ item.product.name }}</td>
+
+              <td width="120">
+                <input type="number"
+                       class="form-control form-control-sm quantity"
+                       value="{{ item.quantity }}"
+                       min="1">
+              </td>
+
+              <td width="120">
+                <select class="form-select form-select-sm unit_type">
+                  <option value="piece" {% if item.unit_type == 'piece' %}selected{% endif %}>Piece</option>
+                  <option value="dozen" {% if item.unit_type == 'dozen' %}selected{% endif %}>Dozen</option>
+                </select>
+              </td>
+
+              <td width="140">
+                <input type="number"
+                       step="0.01"
+                       class="form-control form-control-sm price_per_unit"
+                       value="{{ item.price_per_unit }}">
+              </td>
+
+              <td class="item-total">
+                ₹{{ item.total_price|floatformat:2 }}
+              </td>
+
+              <td width="140">
+                <button type="button" class="btn btn-sm btn-success save-item">
+                  <i class="bi bi-check"></i>
+                </button>
+
+                <button type="button" class="btn btn-sm btn-danger delete-item" data-id="{{ item.id }}">
+                  <i class="bi bi-trash"></i>
+                </button>
+              </td>
+
+            </tr>
+            {% empty %}
+            <tr>
+              <td colspan="6" class="text-center py-5">No items added yet</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+
+          <tfoot class="table-light">
+            <tr>
+              <td colspan="4" class="text-end fw-bold">Subtotal:</td>
+              <td colspan="2" class="fw-bold">₹{{ bill.total_amount|floatformat:2 }}</td>
+            </tr>
+            <tr>
+              <td colspan="4" class="text-end fw-bold">Discount:</td>
+              <td colspan="2">-₹{{ bill.discount|floatformat:2 }}</td>
+            </tr>
+            <tr>
+              <td colspan="4" class="text-end fw-bold">Tax:</td>
+              <td colspan="2">+₹{{ bill.tax|floatformat:2 }}</td>
+            </tr>
+            <tr>
+              <td colspan="4" class="text-end fw-bold">Grand Total:</td>
+              <td colspan="2" class="fw-bold text-primary">
+                ₹{{ bill.grand_total|floatformat:2 }}
+              </td>
+            </tr>
+          </tfoot>
+
+        </table>
       </div>
     </div>
+  </div>
+
+  <div class="d-flex justify-content-end gap-3">
+    <a href="{% url 'bill_list' %}" class="btn btn-secondary">Back to List</a>
+    <a href="{% url 'bill_view' bill.id %}" class="btn btn-info">View Bill</a>
+  </div>
+
+</div>
+```
+
   </div>
 </div>
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
 <script>
 $(document).ready(function() {
-  $('.delete-item').click(function() {
-    var itemId = $(this).data('id');
-    if (confirm('Remove this item?')) {
-      $.ajax({
-        url: "{% url 'bill_delete_item' 0 %}".replace('0', itemId),
-        method: 'POST',
-        headers: {'X-CSRFToken': '{{ csrf_token }}'},
-        success: function(response) {
-          if(response.success) {
-            location.reload();
-          }
+
+    // DELETE ITEM
+    $('.delete-item').click(function() {
+        var itemId = $(this).data('id');
+
+        if (confirm('Remove this item?')) {
+            $.ajax({
+                url: "{% url 'bill_delete_item' 0 %}".replace('0', itemId),
+                method: 'POST',
+                headers: {'X-CSRFToken': '{{ csrf_token }}'},
+                success: function(response) {
+                    if(response.success) {
+                        location.reload();
+                    }
+                }
+            });
         }
-      });
-    }
-  });
+    });
+
+    // SAVE ITEM
+    $('.save-item').click(function() {
+
+        var row = $(this).closest('tr');
+        var itemId = row.data('item-id');
+
+        var quantity = row.find('.quantity').val();
+        var unit_type = row.find('.unit_type').val();
+        var price_per_unit = row.find('.price_per_unit').val();
+
+        $.ajax({
+            url: "{% url 'bill_update_item' 0 %}".replace('0', itemId),
+            method: 'POST',
+            data: {
+                quantity: quantity,
+                unit_type: unit_type,
+                price_per_unit: price_per_unit,
+                csrfmiddlewaretoken: '{{ csrf_token }}'
+            },
+            success: function(response) {
+                if(response.success) {
+                    location.reload();
+                }
+            }
+        });
+
+    });
+
+    // AUTO CALCULATE TOTAL (for quantity & price change)
+    $('.quantity, .price_per_unit').on('keyup change', function() {
+
+        var row = $(this).closest('tr');
+
+        var quantity = parseFloat(row.find('.quantity').val()) || 0;
+        var price = parseFloat(row.find('.price_per_unit').val()) || 0;
+
+        var total = quantity * price;
+
+        row.find('.item-total').text("₹" + total.toFixed(2));
+    });
+
+    // AUTO PRICE FROM PRODUCT (unit change)
+    $('.unit_type').on('change', function() {
+
+        var row = $(this).closest('tr');
+        var productId = row.data('product-id');
+        var quantity = row.find('.quantity').val();
+        var unit_type = row.find('.unit_type').val();
+
+        $.ajax({
+            url: "{% url 'calculate_item_price' %}",
+            method: "POST",
+            contentType: "application/json",
+            data: JSON.stringify({
+                product_id: productId,
+                quantity: quantity,
+                unit_type: unit_type
+            }),
+            success: function(response) {
+                if(response.success) {
+                    row.find('.price_per_unit').val(response.price_per_unit.toFixed(2));
+                    row.find('.item-total').text("₹" + response.total_price.toFixed(2));
+                }
+            }
+        });
+
+    });
+
 });
 
+// DATETIME
 function updateDateTime() {
-  const now = new Date();
-  document.getElementById("datetime").innerText = 
-    now.toLocaleDateString() + " | " + now.toLocaleTimeString();
+    const now = new Date();
+    document.getElementById("datetime").innerText =
+        now.toLocaleDateString() + " | " + now.toLocaleTimeString();
 }
+
 setInterval(updateDateTime, 1000);
 updateDateTime();
+
 </script>
 
 {% endblock %}

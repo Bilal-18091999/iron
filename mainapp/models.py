@@ -81,21 +81,25 @@ class BillItem(models.Model):
     total_price = models.DecimalField(max_digits=10, decimal_places=2)
     
     def save(self, *args, **kwargs):
-        # Calculate price based on product's price type and requested unit type
-        if self.product.price_type == 'dozen' and self.unit_type == 'piece':
-            # Convert dozen price to per piece (divide by 12)
-            self.price_per_unit = self.product.price / Decimal('12')
-            self.total_price = self.price_per_unit * self.quantity
-        elif self.product.price_type == 'piece' and self.unit_type == 'dozen':
-            # Convert piece price to per dozen (multiply by 12)
-            self.price_per_unit = self.product.price * Decimal('12')
-            self.total_price = self.price_per_unit * self.quantity
-        else:
-            # Same unit type
-            self.price_per_unit = self.product.price
-            self.total_price = self.price_per_unit * self.quantity
-        
+
+    # Only auto-set price if not manually provided
+        if not self.price_per_unit:
+
+            if self.product.price_type == 'dozen' and self.unit_type == 'piece':
+                self.price_per_unit = self.product.price / Decimal('12')
+
+            elif self.product.price_type == 'piece' and self.unit_type == 'dozen':
+                self.price_per_unit = self.product.price * Decimal('12')
+
+            else:
+                self.price_per_unit = self.product.price
+
+        # Always calculate total
+        self.total_price = self.price_per_unit * self.quantity
+
         super().save(*args, **kwargs)
+
+        # Update bill totals
         self.bill.calculate_totals()
     
     def __str__(self):
