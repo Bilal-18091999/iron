@@ -768,7 +768,41 @@ def store_ledger_view(request, store_id):
     }
     return render(request, 'ledger/store_ledger_view.html', context)
 
+from decimal import Decimal
+from django.db.models import Sum
+from decimal import Decimal
+from django.db.models import Sum
 
+@login_required(login_url='/')
+def store_pending_list(request):
+    stores = Store.objects.all()
+    pending_data = []
+    total_pending = Decimal('0')   # ✅ NEW
+
+    for store in stores:
+        total_bill = Bill.objects.filter(store=store).aggregate(
+            total=Sum('grand_total')
+        )['total'] or Decimal('0')
+
+        total_payment = Payment.objects.filter(store=store).aggregate(
+            total=Sum('amount')
+        )['total'] or Decimal('0')
+
+        balance = total_bill - total_payment
+
+        if balance > 0:
+            pending_data.append({
+                'store': store,
+                'pending': balance
+            })
+            total_pending += balance   # ✅ ADDING TOTAL
+
+    context = {
+        'pending_data': pending_data,
+        'total_pending': total_pending   # ✅ PASS TO TEMPLATE
+    }
+
+    return render(request, 'ledger/store_pending_list.html', context)
 
 @login_required(login_url='/')
 @check_permission('patient_create')

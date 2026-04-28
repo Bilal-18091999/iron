@@ -45,7 +45,7 @@ urlpatterns = [
     path('store-ledger/', views.store_ledger_select, name='store_ledger_select'),
     path('store-ledger/<int:store_id>/', views.store_ledger_view, name='store_ledger_view'),
 
-
+    path('store-pending/', views.store_pending_list, name='store_pending_list'),
         
     path('patient/', views.patient_list, name='patient_list'),
     path('patient/new/', views.patient_create, name='patient_create'),
